@@ -19,4 +19,22 @@ class MentionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Mention::class);
     }
+
+
+    /**
+     * @param Mention $mention
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function save($mention) {
+        dump($mention);
+        try {
+            $this->getEntityManager()->persist($mention);
+            $this->getEntityManager()->flush();
+        } catch (\Exception $e) {
+            dump($e);
+            exit;
+        }
+
+
+    }
 }

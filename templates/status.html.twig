@@ -6,7 +6,19 @@
         <span style="color: {% if mysqlStatus %}green{% else %}red{% endif %};">Mysql {% if mysqlStatus %} connecté {% else %} déconnecté{% endif %}</span>
     </div>
 
+    <ul>
+        <li>
+            <a href="#twitter">Twitter</a>
+        </li>
+        <li>
+            <a href="#google">Google</a>
+        </li>
+    </ul>
+
+
     <div style="display:flex;flex-flow: row wrap;">
+        <a name="twitter"></a>
+        <strong>Status APi twitter</strong>
         {% for service, serviceList  in twitterStatuses %}
             <div>
                 <strong>{{ service }}</strong>
@@ -24,6 +36,10 @@
             </div>
             <hr />
         {% endfor %}
+    </div>
+    <div>
+        <a name="google"></a>
+        <strong>Status APi google</strong>
     </div>
 
 {% endblock %}

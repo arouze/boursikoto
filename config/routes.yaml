@@ -13,3 +13,7 @@ twitter-status:
 analysis:
   path: /analysis
   controller: App\Controller\DefaultController::analysis
+
+analysis-mention:
+  path: /analysis/{mentionId}
+  controller: App\Controller\DefaultController::analyseMention

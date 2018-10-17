@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Service\GoogleService;
+use App\Service\MentionService;
 use App\Service\ParseService;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,14 +15,17 @@ class DefaultController extends AbstractController
     private $parseService;
 
     private $googleService;
+    private $mentionService;
 
     public function __construct(
         ParseService $parseService,
-        GoogleService $googleService
+        GoogleService $googleService,
+        MentionService $mentionService
     )
     {
         $this->parseService = $parseService;
         $this->googleService = $googleService;
+        $this->mentionService = $mentionService;
     }
 
     public function lastTweet() {
@@ -61,5 +65,15 @@ class DefaultController extends AbstractController
             'result' => $result,
             'content' => $request->get('content')
         ]));
+    }
+
+    public function analyseMention($mentionId) {
+        try {
+            $this->mentionService->analyse($mentionId);
+            return new Response(sprintf("Mention : %s updated", $mentionId));
+        } catch(\Exception $e) {
+            return new Response(sprintf("An error occured during mention update %s", $e->getMessage()), $e->getCode());
+        }
+
     }
 }

@@ -80,6 +80,9 @@ class ParseService
             $mention->setUserName($status->user->screen_name);
             $mention->setUserId($status->user->id_str);
             $mention->setUserFollowers($status->user->followers_count);
+            $mention->setSentimentScore(0);
+            $mention->setScore(0);
+            $mention->setSentimentMagnitude(0);
             $count++;
             $this->entityManager->persist($mention);
         }

@@ -46,6 +46,69 @@ class Mention
      */
     private $user_followers;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $sentiment_score;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $sentiment_magnitude;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $score;
+
+    /**
+     * @return mixed
+     */
+    public function getSentimentScore()
+    {
+        return $this->sentiment_score;
+    }
+
+    /**
+     * @param mixed $sentiment_score
+     */
+    public function setSentimentScore($sentiment_score): void
+    {
+        $this->sentiment_score = $sentiment_score;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSentimentMagnitude()
+    {
+        return $this->sentiment_magnitude;
+    }
+
+    /**
+     * @param mixed $sentiment_magnitude
+     */
+    public function setSentimentMagnitude($sentiment_magnitude): void
+    {
+        $this->sentiment_magnitude = $sentiment_magnitude;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScore()
+    {
+        return $this->score;
+    }
+
+    /**
+     * @param mixed $score
+     */
+    public function setScore($score): void
+    {
+        $this->score = $score;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
