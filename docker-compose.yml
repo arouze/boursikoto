@@ -1,0 +1,24 @@
+version: '2'
+services:
+  php:
+    image: eborges/php7.1
+    container_name: boursikoto-php
+    volumes:
+    - .:/var/www/html
+
+  nginx:
+    image: eborges/nginx-symfony4
+    container_name: boursikoto-nginx
+    ports:
+    - "86:80"
+    volumes:
+    - .:/var/www/html
+
+  mysql:
+    image: eborges/mariadb
+    container_name: boursikoto-mysql
+    restart: always
+    ports:
+    - "3386:3306"
+    volumes:
+    - ./data/mysql:/var/lib/mysql

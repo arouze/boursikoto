@@ -1,0 +1,6 @@
+.vagrant
+var
+vendor
+data
+.env
+google_application_credentials.json

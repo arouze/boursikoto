@@ -1,0 +1,15 @@
+index:
+  path: /last-tweet
+  controller: App\Controller\DefaultController::lastTweet
+
+historical:
+  path: /historical
+  controller: App\Controller\DefaultController::historicalTweets
+
+twitter-status:
+  path: /status
+  controller: App\Controller\DefaultController::status
+
+analysis:
+  path: /analysis
+  controller: App\Controller\DefaultController::analysis

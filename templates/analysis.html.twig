@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div>
+        <form action="" method="POST">
+
+            <p>
+                <textarea rows="10" cols="50" name="content"></textarea>
+            </p>
+            <p>
+                <button type="submit">Analyser</button>
+            </p>
+        </form>
+
+        {% if result != '' %}
+            <div style="background-color: #F1F1F1;padding: 13px;">
+
+                <strong>La phrase suivante a été analysée</strong><br/>
+                <p style="padding: 13px;border: 1px dashed grey;background-color: bisque">
+                    {{ content }}
+                </p>
+                Voici les résultats de l'analyse :
+                Score : <span style="color: {% if result['score'] < 0 %}red{% else %}green{% endif %}">{{ result['score'] }}</span><br/>
+                Magnitude : {{ result['magnitude'] }}
+
+                <ul>
+                    <li>
+                        <em>
+                            Le score représente le sentiment de la phrase de -1 a +1 plus il est élevé plus la phrase est positive
+                        </em>
+                    </li>
+                    <li>
+                        <em>
+                            La magnitude représente la conviction de la phrase plus de 0 a +inf elle représente l'enthousiasme de la phrase que ce soit en négatif ou en positif
+                        </em>
+                    </li>
+                </ul>
+
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
