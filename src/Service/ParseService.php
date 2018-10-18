@@ -73,6 +73,11 @@ class ParseService
                 continue;
             }
 
+            // Ignore RTs
+            if (substr($status->text, 0, 2) === 'RT') {
+                continue;
+            }
+
             $mention = new Mention();
             $mention->setContentRaw($status->text);
             $mention->setTwtId($status->id_str);
