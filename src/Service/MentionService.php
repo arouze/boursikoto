@@ -26,6 +26,10 @@ class MentionService
         return $this->mentionRepository->find($mentionId);
     }
 
+    public function count() {
+        return $this->mentionRepository->count([]);
+    }
+
     public function analyse($mentionId) {
         $mention = $this->find($mentionId);
 

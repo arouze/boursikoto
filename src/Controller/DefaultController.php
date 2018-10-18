@@ -45,7 +45,8 @@ class DefaultController extends AbstractController
         return new Response($this->renderView('status.html.twig',
             [
                 'mysqlStatus' => $em->getConnection()->isConnected(),
-                'twitterStatuses' => $this->parseService->getTwitterStatus()
+                'twitterStatuses' => $this->parseService->getTwitterStatus(),
+                'mentionsCount' => $this->mentionService->count()
             ]));
     }
 
@@ -72,7 +73,7 @@ class DefaultController extends AbstractController
             $this->mentionService->analyse($mentionId);
             return new Response(sprintf("Mention : %s updated", $mentionId));
         } catch(\Exception $e) {
-            return new Response(sprintf("An error occured during mention update %s", $e->getMessage()), $e->getCode());
+            return new Response(sprintf("An error occured during mention update %s", $e->getMessage()));
         }
 
     }

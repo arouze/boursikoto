@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class ParseService
 {
     const TWITTER_DATE_FORMAT = 'D M d H:i:s P Y';
-    const CURRENT_QUERY = 'apple';
+    const CURRENT_QUERY = 'xrp';
 
     private $entityManager;
     private $mentionRepository;
