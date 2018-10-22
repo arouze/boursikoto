@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Service\MentionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class ApiController extends AbstractController
 {
@@ -16,7 +17,7 @@ class ApiController extends AbstractController
         $this->mentionService = $mentionService;
     }
 
-    public function tweetCount($year, $month = null, $day = null, $hour = null) {
-        return new JsonResponse($this->mentionService->countMentionByDate($year, $month, $day, $hour));
+    public function tweetCount($year, $month = null, $day = null, $hour = null, Request $request) {
+        return new JsonResponse($this->mentionService->countMentionByDate($year, $month, $day, $hour, $request->get('groupBy')));
     }
 }

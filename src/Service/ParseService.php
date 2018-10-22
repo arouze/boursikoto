@@ -5,12 +5,12 @@ namespace App\Service;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Entity\Mention;
+use App\Entity\MentionHydrator;
 use App\Repository\MentionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ParseService
 {
-    const TWITTER_DATE_FORMAT = 'D M d H:i:s P Y';
     const CURRENT_QUERY = 'xrp';
 
     private $entityManager;
@@ -21,6 +21,7 @@ class ParseService
     public function __construct(EntityManagerInterface $entityManager, MentionRepository $mentionRepository) {
         $this->entityManager = $entityManager;
         $this->mentionRepository = $mentionRepository;
+        // @Todo refactor getenv set this in parameter bag
         $this->twitterAuthConnection = new TwitterOAuth(
             getenv('TWITTER_CONSUMER_KEY'),
             getenv('TWITTER_CONSUMER_SECRET'),
@@ -65,14 +66,10 @@ class ParseService
 
     private function insertNewTweets($statuses) {
 
-        // @Todo Do this in repository
-        $result = $this->entityManager->createQuery('SELECT m.twt_id from App\Entity\Mention m')->getScalarResult();
-        $ids = array_map('current', $result);
-
         $count = 0;
 
         foreach ($statuses->statuses as $status) {
-            if (in_array($status->id_str, $ids)) {
+            if (in_array($status->id_str, array_map('current', $this->mentionRepository->getAllIds()))) {
                 continue;
             }
 
@@ -81,22 +78,10 @@ class ParseService
                 continue;
             }
 
-            // @Todo Do this in Factory or Hydrator
-            $mention = new Mention();
-            $mention->setContentRaw($status->text);
-            $mention->setTwtId($status->id_str);
-            $mention->setCreatedAt(\DateTime::createFromFormat(self::TWITTER_DATE_FORMAT, $status->created_at));
-            $mention->setUserName($status->user->screen_name);
-            $mention->setUserId($status->user->id_str);
-            $mention->setUserFollowers($status->user->followers_count);
-            $mention->setSentimentScore(0);
-            $mention->setScore(0);
-            $mention->setSentimentMagnitude(0);
+            $mentionHydrator = new MentionHydrator();
+            $this->mentionRepository->save($mentionHydrator->hydrate($status));
             $count++;
-            $this->entityManager->persist($mention);
         }
-        $this->entityManager->flush();
-
         return $count;
     }
 

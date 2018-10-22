@@ -41,19 +41,26 @@ class MentionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $year
+     * @return array
+     */
+    public function getAllIds() {
+        return $this->getEntityManager()->createQuery('SELECT m.twt_id from App\Entity\Mention m')->getScalarResult();
+    }
+
+    /**
+     * @param integer $year
+     * @param null|integer $month
+     * @param null|integer $day
+     * @param null|integer $hour
      * @param string $groupBy
      * @return array
      */
-    public function getMentionForYear($year, $groupBy = self::GROUP_BY_YEAR) {
+    public function getMentionForPeriod($year, $month = null, $day = null, $hour = null, $groupBy = self::GROUP_BY_YEAR) {
         try {
-            // @Todo Some refacto here
             $query = $this
                 ->getEntityManager()
                 ->getConnection()
-                ->prepare('SELECT m.`created_at`, ' .
-                    'COUNT(*) FROM mention as m ' .
-                    'WHERE YEAR(m.`created_at`) = ' . $year .
+                ->prepare($this->getPeriodRequest($year, $month, $day, $hour) .
                     ' ' . $this->getGroupBy($groupBy));
 
             $query->execute();
@@ -66,73 +73,29 @@ class MentionRepository extends ServiceEntityRepository
         }
     }
 
-    public function getMentionForMonth($year, $month, $groupBy = self::GROUP_BY_MONTH) {
-        try {
-            // @Todo Some refacto here
-            $query = $this
-                ->getEntityManager()
-                ->getConnection()
-                ->prepare('SELECT m.`created_at`, ' .
-                    'COUNT(*) FROM mention as m '.
-                    'WHERE MONTH(m.`created_at`) = ' . $month .
-                    ' AND YEAR(m.`created_at`) =' . $year .
-                    ' ' . $this->getGroupBy($groupBy));
+    private function getPeriodRequest($year, $month = null, $day = null, $hour = null) {
 
-            $query->execute();
-
-            return $query->fetchAll(\PDO::FETCH_ASSOC);
-
-        } catch (\Exception $e) {
-            dump($e);
-            exit;
+        if (!isset($year)) {
+            throw new Exception(`Can't search mention without Year`);
         }
-    }
 
-    public function getMentionForDay($year, $month, $day, $groupBy = self::GROUP_BY_HOUR) {
-        try {
-            // @Todo Some refacto here
-            $query = $this
-                ->getEntityManager()
-                ->getConnection()
-                ->prepare('SELECT m.`created_at`, ' .
-                    'COUNT(*) FROM mention as m '.
-                    'WHERE DAY(m.`created_at`) = ' . $day .
-                    ' AND YEAR(m.`created_at`) =' . $year .
-                    ' AND MONTH(m.`created_at`) =' . $month .
-                    ' ' . $this->getGroupBy($groupBy));
+        $request = 'SELECT m.`created_at`, ' .
+            'COUNT(*) FROM mention as m ' .
+            'WHERE YEAR(m.`created_at`) = ' . $year;
 
-            $query->execute();
-
-            return $query->fetchAll(\PDO::FETCH_ASSOC);
-
-        } catch (\Exception $e) {
-            dump($e);
-            exit;
+        if (isset($month)) {
+            $request .= ' AND MONTH(m.`created_at`) = ' . $month;
         }
-    }
 
-    public function getMentionForHour($year, $month, $day, $hour, $groupBy = self::GROUP_BY_HOUR) {
-        try {
-            // @Todo Some refacto here
-            $query = $this
-                ->getEntityManager()
-                ->getConnection()
-                ->prepare('SELECT m.`created_at`, ' .
-                    'COUNT(*) FROM mention as m '.
-                    'WHERE HOUR(m.`created_at`) = ' . $hour .
-                    'AND DAY(m.`created_at`) =' . $day .
-                    'AND YEAR(m.`created_at`) =' . $year .
-                    'AND MONTH(m.`created_at`) =' . $month .
-                    ' ' . $this->getGroupBy($groupBy));
-
-            $query->execute();
-
-            return $query->fetchAll(\PDO::FETCH_ASSOC);
-
-        } catch (\Exception $e) {
-            dump($e);
-            exit;
+        if (isset($day)) {
+            $request .= ' AND DAY(m.`created_at`) = ' . $day;
         }
+
+        if (isset($hour)) {
+            $request .= ' AND HOUR(m.`created_at`) = ' . $hour;
+        }
+
+        return $request;
     }
 
     /**
