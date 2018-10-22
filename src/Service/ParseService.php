@@ -36,12 +36,14 @@ class ParseService
 
     public function getHistoricalTweets() {
         $date = new \DateTime('2018-09-01');
+        // @Todo Do this in repository
         $result = $this->entityManager->createQuery('SELECT m.createdAt FROM App\Entity\Mention as m ORDER BY m.createdAt ASC')->setMaxResults(1)->getScalarResult();
         $oldestTweetDate = \DateTime::createFromFormat('Y-m-d H:i:s', $result[0]['createdAt']);
 
         $count = 0;
 
         while ($oldestTweetDate->diff($date)->invert === 1) {
+            // @Todo Do this in repository
             $result = $this->entityManager->createQuery('SELECT m.createdAt FROM App\Entity\Mention as m ORDER BY m.createdAt ASC')->setMaxResults(1)->getScalarResult();
             $oldestTweetDate = \DateTime::createFromFormat('Y-m-d H:i:s', $result[0]['createdAt']);
 
@@ -63,6 +65,7 @@ class ParseService
 
     private function insertNewTweets($statuses) {
 
+        // @Todo Do this in repository
         $result = $this->entityManager->createQuery('SELECT m.twt_id from App\Entity\Mention m')->getScalarResult();
         $ids = array_map('current', $result);
 
@@ -78,6 +81,7 @@ class ParseService
                 continue;
             }
 
+            // @Todo Do this in Factory or Hydrator
             $mention = new Mention();
             $mention->setContentRaw($status->text);
             $mention->setTwtId($status->id_str);

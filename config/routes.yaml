@@ -17,3 +17,19 @@ analysis:
 analysis-mention:
   path: /analysis/{mentionId}
   controller: App\Controller\DefaultController::analyseMention
+
+api-tweet-count:
+  path: /tweet-count/{year}
+  controller: App\Controller\ApiController::tweetCount
+
+api-tweet-count-month:
+  path: /tweet-count/{year}/{month}
+  controller: App\Controller\ApiController::tweetCount
+
+api-tweet-count-day:
+  path: /tweet-count/{year}/{month}/{day}
+  controller: App\Controller\ApiController::tweetCount
+
+api-tweet-count-hour:
+  path: /tweet-count/{year}/{month}/{day}/{hour}
+  controller: App\Controller\ApiController::tweetCount
