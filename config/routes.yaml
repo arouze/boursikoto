@@ -18,6 +18,10 @@ analysis-mention:
   path: /analysis/{mentionId}
   controller: App\Controller\DefaultController::analyseMention
 
+graph:
+  path: /graph
+  controller: App\Controller\DefaultController::graph
+
 api-tweet-count:
   path: /tweet-count/{year}
   controller: App\Controller\ApiController::tweetCount

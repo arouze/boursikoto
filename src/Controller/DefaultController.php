@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+// @Todo refactor Controller name
 class DefaultController extends AbstractController
 {
     private $parseService;
@@ -75,6 +76,9 @@ class DefaultController extends AbstractController
         } catch(\Exception $e) {
             return new Response(sprintf("An error occured during mention update %s", $e->getMessage()));
         }
+    }
 
+    public function graph(Request $request) {
+        return new Response($this->renderView('graph.html.twig'));
     }
 }
