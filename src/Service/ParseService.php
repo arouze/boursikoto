@@ -4,9 +4,8 @@ namespace App\Service;
 
 
 use Abraham\TwitterOAuth\TwitterOAuth;
-use App\Entity\Mention;
-use App\Entity\MentionHydrator;
 use App\Repository\MentionRepository;
+use App\Service\Hydrator\MentionHydrator;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ParseService
@@ -17,10 +16,12 @@ class ParseService
     private $mentionRepository;
     private $twitterAuthConnection;
 
+    private $mentionHydrator;
 
-    public function __construct(EntityManagerInterface $entityManager, MentionRepository $mentionRepository) {
+    public function __construct(EntityManagerInterface $entityManager, MentionRepository $mentionRepository, MentionHydrator $mentionHydrator) {
         $this->entityManager = $entityManager;
         $this->mentionRepository = $mentionRepository;
+        $this->mentionHydrator = $mentionHydrator;
         // @Todo refactor getenv set this in parameter bag
         $this->twitterAuthConnection = new TwitterOAuth(
             getenv('TWITTER_CONSUMER_KEY'),
@@ -78,8 +79,7 @@ class ParseService
                 continue;
             }
 
-            $mentionHydrator = new MentionHydrator();
-            $this->mentionRepository->save($mentionHydrator->hydrate($status));
+            $this->mentionRepository->save($this->mentionHydrator->hydrate($status));
             $count++;
         }
         return $count;

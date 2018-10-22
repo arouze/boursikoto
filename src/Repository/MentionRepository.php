@@ -79,8 +79,8 @@ class MentionRepository extends ServiceEntityRepository
             throw new Exception(`Can't search mention without Year`);
         }
 
-        $request = 'SELECT m.`created_at`, ' .
-            'COUNT(*) FROM mention as m ' .
+        $request = 'SELECT m.`created_at` as date, ' .
+            'COUNT(*) as value FROM mention as m ' .
             'WHERE YEAR(m.`created_at`) = ' . $year;
 
         if (isset($month)) {

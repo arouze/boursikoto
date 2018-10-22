@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Entity;
+namespace App\Service\Hydrator;
 
+
+use App\Entity\Mention;
 
 class MentionHydrator
 {
