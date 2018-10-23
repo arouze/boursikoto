@@ -2,10 +2,8 @@
 
 namespace App\Service;
 
-
 use App\Repository\MentionRepository;
 use \App\Entity\Mention;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class MentionService

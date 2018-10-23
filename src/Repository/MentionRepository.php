@@ -41,6 +41,18 @@ class MentionRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return Mention[]
+     */
+    public function getAllMentionsWithoutSentimentScore() {
+        $qb = $this->createQueryBuilder('m')
+            ->andWhere('m.sentiment_score = 0')
+            ->setMaxResults(50)
+            ->getQuery();
+
+        return $qb->execute();
+    }
+
+    /**
      * @return array
      */
     public function getAllIds() {
