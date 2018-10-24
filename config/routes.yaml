@@ -37,3 +37,7 @@ api-tweet-count-day:
 api-tweet-count-hour:
   path: /tweet-count/{year}/{month}/{day}/{hour}
   controller: App\Controller\ApiController::tweetCount
+
+api-ban-user:
+  path: /user/ban/{id}
+  controller: App\Controller\ApiController::banUser

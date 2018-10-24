@@ -3,12 +3,12 @@
 {% block body %}
 
     <div>
-        <span style="color: {% if mysqlStatus %}green{% else %}red{% endif %};">Mysql {% if mysqlStatus %} connecté {% else %} déconnecté{% endif %}</span>
-        {% if mysqlStatus %}
-            <p>
-                Nombre de mentions : {{ mentionsCount }}
-            </p>
-        {% endif %}
+        <p>
+            Nombre de mentions : {{ mentionsCount }}
+        </p>
+        <p>
+            Nombre de user Banni : {{ bannedUsers }}
+        </p>
     </div>
 
     <ul>

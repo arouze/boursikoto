@@ -8,6 +8,7 @@
         "abraham/twitteroauth": "^0.9.2",
         "google/cloud": "^0.82.0",
         "guzzlehttp/guzzle": "^6.3",
+        "ramsey/uuid-doctrine": "^1.5",
         "sunra/php-simple-html-dom-parser": "^1.5",
         "symfony/console": "*",
         "symfony/flex": "^1.1",

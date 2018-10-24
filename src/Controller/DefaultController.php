@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Service\GoogleService;
 use App\Service\MentionService;
 use App\Service\ParseService;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,16 +18,19 @@ class DefaultController extends AbstractController
 
     private $googleService;
     private $mentionService;
+    private $userService;
 
     public function __construct(
         ParseService $parseService,
         GoogleService $googleService,
-        MentionService $mentionService
+        MentionService $mentionService,
+        UserService $userService
     )
     {
         $this->parseService = $parseService;
         $this->googleService = $googleService;
         $this->mentionService = $mentionService;
+        $this->userService = $userService;
     }
 
     public function lastTweet() {
@@ -45,7 +49,7 @@ class DefaultController extends AbstractController
 
         return new Response($this->renderView('status.html.twig',
             [
-                'mysqlStatus' => $em->getConnection()->isConnected(),
+                'bannedUsers' => $this->userService->getBannedUserCount(),
                 'twitterStatuses' => $this->parseService->getTwitterStatus(),
                 'mentionsCount' => $this->mentionService->count()
             ]));
