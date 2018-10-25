@@ -20,17 +20,25 @@ class UserRepository extends ServiceEntityRepository
      */
     public function banUserById($id) {
         $user = new User();
-        $user->setTwtId($id);
+        $user->setTwtAccountId($id);
         $user->setBannedDate(new \DateTime());
         $user->setIsBanned(1);
-
-        dump($user);
 
         try {
             $this->getEntityManager()->persist($user);
             $this->getEntityManager()->flush();
         } catch (\Exception $e) {
             throw new \Exception($e);
+        }
+    }
+
+
+    public function getAllTwittersIds() {
+        try {
+            $result = $this->getEntityManager()->createQuery('SELECT GROUP_CONCAT(u.twt_account_id, \'\') from App\Entity\User u')->execute();
+            return explode(',', $result[0][1]);
+        } catch (\Exception $e) {
+            throw new \Exception(`Can't get banned twitter accounts.`);
         }
     }
 }

@@ -14,14 +14,18 @@ class MentionService
      */
     private $parameterBag;
 
+    private $userService;
+
     public function __construct(
         MentionRepository $mentionRepository,
         GoogleService $googleService,
-        ParameterBagInterface $parameterBag
+        ParameterBagInterface $parameterBag,
+        UserService $userService
     ) {
         $this->mentionRepository = $mentionRepository;
         $this->googleService = $googleService;
         $this->parameterBag = $parameterBag;
+        $this->userService = $userService;
     }
 
     /**
@@ -47,7 +51,7 @@ class MentionService
     public function analyse($mentionId) {
         $mention = $this->find($mentionId);
 
-        if ($mention) {
+        if ($mention && !in_array($mention->getUserId(), $this->userService->getBannedUserTwitterIds())) {
             $sentiment = $this->googleService->sentimentAnalysis($mention->getContentRaw());
 
             $mention->setSentimentMagnitude($sentiment['magnitude']);

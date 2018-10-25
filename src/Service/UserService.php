@@ -20,6 +20,10 @@ class UserService
         return $this->userRepository->count(['isBanned' => 1]);
     }
 
+    public function getBannedUserTwitterIds() {
+        return $this->userRepository->getAllTwittersIds();
+    }
+
     public function banUserById($id) {
         try {
             $this->userRepository->banUserById($id);

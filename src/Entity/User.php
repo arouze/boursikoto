@@ -26,7 +26,7 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $twt_id;
+    private $twt_account_id;
 
     /**
      * @ORM\Column(type="boolean")
@@ -37,6 +37,22 @@ class User
      * @ORM\Column(type="datetime")
      */
     private $bannedDate;
+
+    /**
+     * @return mixed
+     */
+    public function getTwtAccountId()
+    {
+        return $this->twt_account_id;
+    }
+
+    /**
+     * @param mixed $twt_account_id
+     */
+    public function setTwtAccountId($twt_account_id): void
+    {
+        $this->twt_account_id = $twt_account_id;
+    }
 
     /**
      * @return mixed
@@ -68,22 +84,6 @@ class User
     public function setId($id): void
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTwtId()
-    {
-        return $this->twt_id;
-    }
-
-    /**
-     * @param mixed $twt_id
-     */
-    public function setTwtId($twt_id): void
-    {
-        $this->twt_id = $twt_id;
     }
 
     /**
