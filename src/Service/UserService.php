@@ -20,13 +20,28 @@ class UserService
         return $this->userRepository->count(['isBanned' => 1]);
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function getBannedUserTwitterIds() {
         return $this->userRepository->getAllTwittersIds();
     }
 
+    /**
+     * @param $id
+     * @return bool|mixed
+     * @throws \Exception
+     */
     public function banUserById($id) {
+
+        // Ignore already banned users.
+        if (in_array($id, $this->getBannedUserTwitterIds())) {
+            return false;
+        }
+
         try {
-            $this->userRepository->banUserById($id);
+            return $this->userRepository->banUserById($id)->getId();
         } catch (\Exception $e) {
             dump($e);
         }

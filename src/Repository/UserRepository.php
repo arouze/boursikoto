@@ -16,6 +16,7 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * @param $id
+     * @return User
      * @throws \Exception
      */
     public function banUserById($id) {
@@ -27,12 +28,17 @@ class UserRepository extends ServiceEntityRepository
         try {
             $this->getEntityManager()->persist($user);
             $this->getEntityManager()->flush();
+
+            return $user;
         } catch (\Exception $e) {
             throw new \Exception($e);
         }
     }
 
-
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function getAllTwittersIds() {
         try {
             $result = $this->getEntityManager()->createQuery('SELECT GROUP_CONCAT(u.twt_account_id, \'\') from App\Entity\User u')->execute();
