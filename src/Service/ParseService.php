@@ -15,13 +15,23 @@ class ParseService
     private $entityManager;
     private $mentionRepository;
     private $twitterAuthConnection;
-
     private $mentionHydrator;
+    private $mentionService;
+    private $userService;
 
-    public function __construct(EntityManagerInterface $entityManager, MentionRepository $mentionRepository, MentionHydrator $mentionHydrator) {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        MentionRepository $mentionRepository,
+        MentionHydrator $mentionHydrator,
+        MentionService $mentionService,
+        UserService $userService
+    ) {
         $this->entityManager = $entityManager;
         $this->mentionRepository = $mentionRepository;
         $this->mentionHydrator = $mentionHydrator;
+        $this->mentionService = $mentionService;
+        $this->userService = $userService;
+
         // @Todo refactor getenv set this in parameter bag
         $this->twitterAuthConnection = new TwitterOAuth(
             getenv('TWITTER_CONSUMER_KEY'),
@@ -77,6 +87,10 @@ class ParseService
             // Ignore RTs
             if (substr($status->text, 0, 2) === 'RT') {
                 continue;
+            }
+
+            if ($this->mentionService->isMentionContainBannedTerm($status->text)) {
+                $this->userService->banUserById($status->user->id_str);
             }
 
             $this->mentionRepository->save($this->mentionHydrator->hydrate($status));

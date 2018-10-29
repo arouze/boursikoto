@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Mention
 {
+    const MENTION_BANNED_TERMS = ['Bitmex', 'Binance'];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

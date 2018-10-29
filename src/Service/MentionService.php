@@ -16,8 +16,6 @@ class MentionService
 
     private $userService;
 
-    private $mentionsTermsBanned = ['Bitmex', 'Binance'];
-
     public function __construct(
         MentionRepository $mentionRepository,
         GoogleService $googleService,
@@ -56,7 +54,7 @@ class MentionService
         if (
             $mention &&
             !in_array($mention->getUserId(), $this->userService->getBannedUserTwitterIds()) &&
-            !$this->strposa($mention->getContentRaw(), $this->mentionsTermsBanned)
+            !$this->isMentionContainBannedTerm($mention->getContentRaw())
         ) {
             $sentiment = $this->googleService->sentimentAnalysis($mention->getContentRaw());
 
@@ -85,5 +83,13 @@ class MentionService
         if(empty($chr)) return false;
 
         return min($chr);
+    }
+
+    /**
+     * @param $mentionContentRaw
+     * @return bool|mixed
+     */
+    public function isMentionContainBannedTerm($mentionContentRaw) {
+        return $this->strposa($mentionContentRaw, Mention::MENTION_BANNED_TERMS);
     }
 }
