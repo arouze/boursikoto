@@ -16,6 +16,8 @@ class MentionService
 
     private $userService;
 
+    private $mentionsTermsBanned = ['Bitmex', 'Binance'];
+
     public function __construct(
         MentionRepository $mentionRepository,
         GoogleService $googleService,
@@ -51,7 +53,11 @@ class MentionService
     public function analyse($mentionId) {
         $mention = $this->find($mentionId);
 
-        if ($mention && !in_array($mention->getUserId(), $this->userService->getBannedUserTwitterIds())) {
+        if (
+            $mention &&
+            !in_array($mention->getUserId(), $this->userService->getBannedUserTwitterIds()) &&
+            !$this->strposa($mention->getContentRaw(), $this->mentionsTermsBanned)
+        ) {
             $sentiment = $this->googleService->sentimentAnalysis($mention->getContentRaw());
 
             $mention->setSentimentMagnitude($sentiment['magnitude']);
@@ -59,5 +65,25 @@ class MentionService
 
             $this->mentionRepository->save($mention);
         }
+    }
+
+    /**
+     * Strpos for an array
+     *
+     * @param $haystack
+     * @param array $needles
+     * @param int $offset
+     * @return bool|mixed
+     */
+    private function strposa($haystack, $needles = [], $offset = 0) {
+        $chr = [];
+        foreach($needles as $needle) {
+            $res = strpos($haystack, $needle, $offset);
+            if ($res !== false) $chr[$needle] = $res;
+        }
+
+        if(empty($chr)) return false;
+
+        return min($chr);
     }
 }
