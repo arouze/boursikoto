@@ -11,6 +11,10 @@ class Mention
 {
     const MENTION_BANNED_TERMS = ['Bitmex', 'Binance'];
 
+    const MENTION_STATUS_CREATED = 'CREATED';
+
+    const MENTION_STATUS_ANALYSED = 'ANALYSED';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -41,7 +45,7 @@ class Mention
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $user_id;
+    private $user_id; // @Todo Join on user table
 
     /**
      * @ORM\Column(type="integer")
@@ -62,6 +66,25 @@ class Mention
      * @ORM\Column(type="integer")
      */
     private $score;
+
+    /** @ORM\Column(type="string", length=20, columnDefinition="ENUM('CREATED', 'ANALYSED')") */
+    private $status = self::MENTION_STATUS_CREATED;
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
 
     /**
      * @return mixed

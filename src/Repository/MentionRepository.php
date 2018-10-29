@@ -45,7 +45,8 @@ class MentionRepository extends ServiceEntityRepository
      */
     public function getAllMentionsWithoutSentimentScore() {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.sentiment_score = 0')
+            ->andWhere('m.status = :status')
+            ->setParameter('status', Mention::MENTION_STATUS_CREATED)
             ->setMaxResults(50)
             ->getQuery();
 
