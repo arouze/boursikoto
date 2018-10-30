@@ -15,6 +15,8 @@ class Mention
 
     const MENTION_STATUS_ANALYSED = 'ANALYSED';
 
+    const MENTION_STATUS_SCANNED = 'SCANNED';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
