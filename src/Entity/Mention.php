@@ -69,7 +69,7 @@ class Mention
      */
     private $score;
 
-    /** @ORM\Column(type="string", length=20, columnDefinition="ENUM('CREATED', 'ANALYSED')") */
+    /** @ORM\Column(type="string", length=20, columnDefinition="ENUM('CREATED', 'ANALYSED', 'SCANNED')") */
     private $status = self::MENTION_STATUS_CREATED;
 
     /**
