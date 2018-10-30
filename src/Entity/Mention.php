@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Mention
 {
-    const MENTION_BANNED_TERMS = ['Bitmex', 'Binance'];
+    const MENTION_BANNED_TERMS = ['Bitmex', 'Binance', 'Bitstamp', 'Bitexen'];
 
     const MENTION_STATUS_CREATED = 'CREATED';
 

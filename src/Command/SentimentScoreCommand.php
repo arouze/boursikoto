@@ -37,7 +37,12 @@ class SentimentScoreCommand extends Command
         /** @var Mention $mention */
         foreach ($mentions as $mention) {
             $output->writeln(sprintf("Analyse %s", $mention->getId()));
-            $this->mentionService->analyse($mention->getId());
+            try {
+                $this->mentionService->analyse($mention->getId());
+            } catch (\Exception $e) {
+                $output->writeln(sprintf("Fail on %s : %s", $mention->getId(), $e->getMessage()));
+                continue;
+            }
         }
     }
 }
