@@ -60,6 +60,7 @@ class MentionService
 
             $mention->setSentimentMagnitude($sentiment['magnitude']);
             $mention->setSentimentScore($sentiment['score']);
+            $mention->setStatus(Mention::MENTION_STATUS_ANALYSED);
 
             $this->mentionRepository->save($mention);
         }
