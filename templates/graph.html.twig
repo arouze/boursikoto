@@ -4,18 +4,23 @@
 
     <div>
         <form action="" method="POST">
-
             <p>
                 <label for="year">Année</label>
-                <input type="text" name="year" id="year" />
+                <input type="text" name="year" id="year" value="{% if routeParams['year'] is defined %}{{ routeParams['year'] }}{% endif %}" />
                 <label for="month">Mois</label>
-                <input type="text" name="month" id="month" />
+                <input type="text" name="month" id="month" value="{% if routeParams['month'] is defined %}{{ routeParams['month'] }}{% endif %}" />
                 <label for="day">Jour</label>
-                <input type="text" name="day" id="day" />
+                <input type="text" name="day" id="day"  value="{% if routeParams['day'] is defined %}{{ routeParams['day'] }}{% endif %}" />
                 <label for="hour">Heure</label>
-                <input type="text" name="hour" id="hour" />
-            </p>
-            <p>
+                <input type="text" name="hour" id="hour"  value="{% if routeParams['hour'] is defined %}{{ routeParams['hour'] }}{% endif %}" />
+
+                <label>Regrouper</label>
+                <select name="group_by">
+                    <option value="YEAR" {% if group_by == 'YEAR' %}selected="selected"{% endif %}>YEAR</option>
+                    <option value="MONTH" {% if group_by == 'MONTH' %}selected="selected"{% endif %}>MONTH</option>
+                    <option value="DAY" {% if group_by == 'DAY' %}selected="selected"{% endif %}>DAY</option>
+                    <option value="HOUR" {% if group_by == 'HOUR' %}selected="selected"{% endif %}>HOUR</option>
+                </select>
                 <button type="submit">Afficher</button>
             </p>
         </form>
@@ -25,7 +30,6 @@
             <div id="chartdiv" style="width: 100%; height: 400px;"></div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}
@@ -33,32 +37,30 @@
     <script src="/assets/js/amcharts.js"></script>
     <script src="/assets/js/serial.js"></script>
     <script>
-        axios.get('http://localhost:8080/tweet-count/2018/10/22?groupBy=HOUR')
-            .then((response) => {
-                console.log(response.data);
+        getMaxValue = function(data) {
+            value = 0;
 
+            for (let i = 0; i < data.length; i++) {
+                if ((data[i].value * 1) > value) {
+                    value = data[i].value;
+                }
+            }
+
+            return value;
+        };
+
+        axios.get('{{ url(route, routeParams) }}?groupBy={{ group_by }}')
+            .then((response) => {
                 var chart = AmCharts.makeChart("chartdiv", {
                     "type": "serial",
                     "theme": "dark",
                     "dataDateFormat": "YYYY-MM-DD JJ:NN:SS",
                     "dataProvider": response.data,
                     "valueAxes": [{
-                        "maximum": 600,
+                        "maximum": getMaxValue(response.data),
                         "minimum": 0,
                         "axisAlpha": 0,
-                        "guides": [{
-                            "fillAlpha": 0.1,
-                            "fillColor": "#CC0000",
-                            "lineAlpha": 0,
-                            "toValue": 120,
-                            "value": 0
-                        }, {
-                            "fillAlpha": 0.1,
-                            "fillColor": "#0000cc",
-                            "lineAlpha": 0,
-                            "toValue": 200,
-                            "value": 120
-                        }]
+                        "guides": []
                     }],
                     "graphs": [{
                         "bullet": "round",

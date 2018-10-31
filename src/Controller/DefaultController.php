@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 // @Todo refactor Controller name
 class DefaultController extends AbstractController
@@ -83,6 +84,49 @@ class DefaultController extends AbstractController
     }
 
     public function graph(Request $request) {
-        return new Response($this->renderView('graph.html.twig'));
+        $currentDate = new \DateTime();
+
+        $year = $request->get('year', $currentDate->format('Y'));
+        $month = $request->get('month', $currentDate->format('m'));
+        $day = $request->get('day', $currentDate->format('d'));
+        $hour = $request->get('hour', null);
+        $groupBy = $request->get('group_by', 'HOUR');
+
+        $route =  'api-tweet-count';
+        $routeParams = ['year' => $year];
+
+        if ($month) {
+            $route =  'api-tweet-count-month';
+            $routeParams = [
+                'year'  => $year,
+                'month' => $month
+            ];
+        }
+
+        if ($day) {
+            $route =  'api-tweet-count-day';
+            $routeParams = [
+                'year'  => $year,
+                'month' => $month,
+                'day'   => $day
+            ];
+        }
+
+        if ($hour) {
+            $route =  'api-tweet-count-hour';
+            $routeParams = [
+                'year'  => $year,
+                'month' => $month,
+                'day'   => $day,
+                'hour'  => $hour
+            ];
+        }
+
+        return new Response($this->renderView('graph.html.twig', [
+            'route'       => $route,
+            'routeParams' => $routeParams,
+            'group_by'    => $groupBy
+        ]));
+
     }
 }

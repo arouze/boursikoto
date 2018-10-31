@@ -73,7 +73,9 @@ class MentionRepository extends ServiceEntityRepository
             $query = $this
                 ->getEntityManager()
                 ->getConnection()
-                ->prepare($this->getPeriodRequest($year, $month, $day, $hour) .
+                ->prepare(
+                    $this->dateFormat($groupBy) .
+                    $this->getPeriodRequest($year, $month, $day, $hour) .
                     ' ' . $this->getGroupBy($groupBy));
 
             $query->execute();
@@ -92,8 +94,7 @@ class MentionRepository extends ServiceEntityRepository
             throw new Exception(`Can't search mention without Year`);
         }
 
-        $request = 'SELECT m.`created_at` as date, ' .
-            'COUNT(*) as value FROM mention as m ' .
+        $request = 'COUNT(*) as value FROM mention as m ' .
             'WHERE YEAR(m.`created_at`) = ' . $year;
 
         if (isset($month)) {
@@ -109,6 +110,26 @@ class MentionRepository extends ServiceEntityRepository
         }
 
         return $request;
+    }
+
+    private function dateFormat($groupBy) {
+        $select = 'SELECT ';
+
+        switch ($groupBy) {
+            case self::GROUP_BY_HOUR:
+                $select .= ' m.`created_at`';
+                break;
+            case self::GROUP_BY_DAY:
+                $select .= 'DATE(m.`created_at`)';
+                break;
+            case self::GROUP_BY_MONTH:
+                $select .= 'DATE(m.`created_at`)';
+                break;
+            default:
+                $select .= 'DATE_FORMAT(m.`created_at`, \'%Y\')';
+        }
+
+        return $select . ' as date, ';
     }
 
     /**
