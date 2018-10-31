@@ -48,6 +48,7 @@ class MentionRepository extends ServiceEntityRepository
             ->andWhere('m.status = :status')
             ->setParameter('status', Mention::MENTION_STATUS_CREATED)
             ->setMaxResults(50)
+            ->orderBy('m.createdAt', 'DESC')
             ->getQuery();
 
         return $qb->execute();

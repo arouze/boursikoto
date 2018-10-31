@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Repository\MentionRepository;
 use App\Service\GoogleService;
 use App\Service\MentionService;
 use App\Service\ParseService;
@@ -10,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 
 // @Todo refactor Controller name
 class DefaultController extends AbstractController
